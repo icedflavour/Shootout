@@ -73,6 +73,7 @@ public class Bezier : MonoBehaviour
 
         // По итогам итераций P0, P1, P2, P3 — ваши искомые контрольные точки
         Debug.Log($"P0 = {P0}, P1 = {P1}, P2 = {P2}, P3 = {P3}");
+
     }
 
     // Функция для вычисления точки на кривой Безье по t
@@ -86,5 +87,36 @@ public class Bezier : MonoBehaviour
                (3f * u2 * t) * p1 +
                (3f * u * t2) * p2 +
                (t2 * t) * p3;
+    }
+
+    public Vector3 GetPoint(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
+    {
+        Vector3 p01 = Vector3.Lerp(p0, p1, t);
+        Vector3 p12 = Vector3.Lerp(p1, p2, t);
+        Vector3 p23 = Vector3.Lerp(p2, p3, t);
+
+        Vector3 p012 = Vector3.Lerp(p01, p12, t);
+        Vector3 p123 = Vector3.Lerp(p12, p23, t);
+
+        Vector3 p0123 = Vector3.Lerp(p012, p123, t);
+
+        return p0123;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (P0 == null || P1 == null || P2 == null || P3 == null)
+            return;
+
+        int segments = 20;
+        Vector3 prevPoint = P0;
+
+        for (int i = 1; i <= segments; i++)
+        {
+            float t = i / (float)segments;
+            Vector3 point = GetPoint(P0, P1, P2, P3, t);
+            Gizmos.DrawLine(prevPoint, point);
+            prevPoint = point;
+        }
     }
 }

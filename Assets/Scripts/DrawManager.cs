@@ -17,6 +17,7 @@ public class DrawManager : MonoBehaviour
     void Start()
     {
         _cam = Camera.main;
+        _bezier = GetComponent<Bezier>();
         Debug.Log(_canvas.GetComponent<Canvas>().pixelRect);
     }
 
@@ -46,6 +47,7 @@ public class DrawManager : MonoBehaviour
             // Преобразуем их в 3D
             List<Vector3> swipePoints3D = ConvertTo3DPoints(swipePoints2D, ball.position);
             // Передаем в скрипт Bezier
+
             _bezier.swipePoints = swipePoints3D;
             _bezier.ApproxBezier();
         }
