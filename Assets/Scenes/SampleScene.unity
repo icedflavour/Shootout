@@ -294,7 +294,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _canvas: {fileID: 996380433}
   _linePrefab: {fileID: 5866643962702337137, guid: 37b7142210409884dac2fb955eb34975, type: 3}
+<<<<<<< HEAD
   _bezier: {fileID: 399603584}
+=======
+  _bezier: {fileID: 0}
+>>>>>>> 7f2fdd2c7cf153d8b8b93cc3c4f4db142b645540
   ball: {fileID: 1319275072}
 --- !u!4 &399603583
 Transform:
@@ -320,7 +324,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 399603581}
   m_Enabled: 1
   m_EditorHideFlags: 0
+<<<<<<< HEAD
   m_Script: {fileID: 11500000, guid: edcefe4a81a6ad740ae63fde6a27e035, type: 3}
+=======
+  m_Script: {fileID: 11500000, guid: c52874314b24f7445a248db529ba8583, type: 3}
+>>>>>>> 7f2fdd2c7cf153d8b8b93cc3c4f4db142b645540
   m_Name: 
   m_EditorClassIdentifier: 
   swipePoints: []
@@ -1296,6 +1304,7 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1355465114}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+<<<<<<< HEAD
 --- !u!1 &1521502478
 GameObject:
   m_ObjectHideFlags: 0
@@ -1438,6 +1447,8 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+=======
+>>>>>>> 7f2fdd2c7cf153d8b8b93cc3c4f4db142b645540
 --- !u!1 &1936769897
 GameObject:
   m_ObjectHideFlags: 0
