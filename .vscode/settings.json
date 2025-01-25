@@ -56,5 +56,9 @@
         "temp/": true,
         "Temp/": true
     },
+<<<<<<< HEAD
+    "dotnet.defaultSolution": "Penalty Shootout.sln"
+=======
     "dotnet.defaultSolution": "Shootout.sln"
+>>>>>>> 7f2fdd2c7cf153d8b8b93cc3c4f4db142b645540
 }
