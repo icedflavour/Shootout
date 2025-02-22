@@ -8,6 +8,7 @@ public class Bezier : MonoBehaviour
 
     // Результат — 4 контрольные точки Безье
     private Vector3 P0, P1, P2, P3;
+    [SerializeField] private GameObject _ballPosition;
 
     [SerializeField] private int iterations = 1000;     // Количество итераций градиентного спуска
     [SerializeField] private float learningRate = 0.01f; // Скорость обучения (шаг)
@@ -91,6 +92,8 @@ public class Bezier : MonoBehaviour
 
     public Vector3 GetPoint(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
     {
+        P0 = _ballPosition.transform.position;
+        
         Vector3 p01 = Vector3.Lerp(p0, p1, t);
         Vector3 p12 = Vector3.Lerp(p1, p2, t);
         Vector3 p23 = Vector3.Lerp(p2, p3, t);
@@ -98,7 +101,7 @@ public class Bezier : MonoBehaviour
         Vector3 p012 = Vector3.Lerp(p01, p12, t);
         Vector3 p123 = Vector3.Lerp(p12, p23, t);
 
-        Vector3 p0123 = Vector3.Lerp(p012, p123, t);
+        Vector3 p0123 = Vector3.Lerp(P0, p123, t);
 
         return p0123;
     }
