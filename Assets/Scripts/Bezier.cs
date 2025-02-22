@@ -6,8 +6,10 @@ public class Bezier : MonoBehaviour
     // Исходные точки свайпа (задайте в инспекторе или сформируйте самостоятельно)
     public List<Vector3> swipePoints;
 
+    [SerializeField] private float deltaX, perspectiveSize;
+
     // Результат — 4 контрольные точки Безье
-    private Vector3 P0, P1, P2, P3;
+    [SerializeField] private Vector3 P0, P1, P2, P3;
     [SerializeField] private GameObject _ballPosition;
 
     [SerializeField] private int iterations = 1000;     // Количество итераций градиентного спуска
@@ -29,6 +31,9 @@ public class Bezier : MonoBehaviour
             tList.Add((float)i / (n - 1));
         }
 
+        deltaX = (swipePoints[n - 1].x - swipePoints[0].x) * perspectiveSize;
+
+
         // 2) Задаем P0 и P3
         P0 = swipePoints[0];
         P3 = swipePoints[n - 1];
@@ -37,6 +42,8 @@ public class Bezier : MonoBehaviour
         // Например, пусть P1 чуть смещена на 1/3, P2 на 2/3 отрезка [P0,P3]
         P1 = Vector3.Lerp(P0, P3, 1f/3f);
         P2 = Vector3.Lerp(P0, P3, 2f/3f);
+
+        P3 = new Vector3(swipePoints[n - 1].x + deltaX, swipePoints[n - 1].y, swipePoints[n - 1].z);
 
         // 3) Итерируем градиентный спуск
         for (int iter = 0; iter < iterations; iter++)
