@@ -14,9 +14,17 @@ public class Bezier : MonoBehaviour
 
     [SerializeField] private int iterations = 1000;     // Количество итераций градиентного спуска
     [SerializeField] private float learningRate = 0.01f; // Скорость обучения (шаг)
+
+    [SerializeField] private GameObject pointPrefab;
+    private GameObject BezierPoint0, BezierPoint1, BezierPoint2, BezierPoint3;
     
     public void ApproxBezier()
     {
+        Destroy(BezierPoint0);
+        Destroy(BezierPoint1);
+        Destroy(BezierPoint2);
+        Destroy(BezierPoint3);
+        
         if (swipePoints == null || swipePoints.Count < 2)
         {
             Debug.LogError("Недостаточно точек для аппроксимации.");
@@ -81,6 +89,15 @@ public class Bezier : MonoBehaviour
 
         // По итогам итераций P0, P1, P2, P3 — ваши искомые контрольные точки
         Debug.Log($"P0 = {P0}, P1 = {P1}, P2 = {P2}, P3 = {P3}");
+
+        BezierPoint0 = Instantiate(pointPrefab, P0, Quaternion.identity);
+        BezierPoint0.name = "BezierPoint-0";
+        BezierPoint1 = Instantiate(pointPrefab, P1, Quaternion.identity);
+        BezierPoint1.name = "BezierPoint-1";
+        BezierPoint2 = Instantiate(pointPrefab, P2, Quaternion.identity);
+        BezierPoint2.name = "BezierPoint-2";
+        BezierPoint3 = Instantiate(pointPrefab, P3, Quaternion.identity);
+        BezierPoint3.name = "BezierPoint-3";
 
     }
 
