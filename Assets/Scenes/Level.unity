@@ -331,6 +331,7 @@ MonoBehaviour:
   P2: {x: 0, y: 0, z: 0}
   P3: {x: 0, y: 0, z: 0}
   _ballPosition: {fileID: 1319275068}
+  speed: 10
   iterations: 1000
   learningRate: 0.01
   pointPrefab: {fileID: 8185161753766708746, guid: d28d37a63a2caa04db82249cf8dc4ae3, type: 3}

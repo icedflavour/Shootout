@@ -12,6 +12,8 @@ public class Bezier : MonoBehaviour
     [SerializeField] private Vector3 P0, P1, P2, P3;
     [SerializeField] private GameObject _ballPosition;
 
+    [SerializeField] private float speed = 1f;
+
     [SerializeField] private int iterations = 1000;     // Количество итераций градиентного спуска
     [SerializeField] private float learningRate = 0.01f; // Скорость обучения (шаг)
 
@@ -99,7 +101,7 @@ public class Bezier : MonoBehaviour
         BezierPoint3 = Instantiate(pointPrefab, P3, Quaternion.identity);
         BezierPoint3.name = "BezierPoint-3";
 
-    }
+    } 
 
     // Функция для вычисления точки на кривой Безье по t
     private Vector3 BezierPoint(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
@@ -117,7 +119,9 @@ public class Bezier : MonoBehaviour
     public Vector3 GetPoint(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
     {
         P0 = _ballPosition.transform.position;
-        
+        p2.x = p2.x * -1; 
+        p2.y = p2.y * -1;
+        p2.z = p2.z * -1;       
         Vector3 p01 = Vector3.Lerp(p0, p1, t);
         Vector3 p12 = Vector3.Lerp(p1, p2, t);
         Vector3 p23 = Vector3.Lerp(p2, p3, t);
