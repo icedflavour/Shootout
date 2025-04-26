@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,13 +9,14 @@ public class Line : MonoBehaviour
 
     public void SetPosition(Vector2 pos, Canvas canv)
     {
-        if (!CanAppend(pos, canv)) return;
+        if (!CanAppend(pos)) return;
 
-        pos = new Vector2(pos.x - canv.pixelRect.width / 2, pos.y - canv.pixelRect.height / 2);
+        Vector2 anchoredPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canv.transform as RectTransform, pos, canv.worldCamera, out anchoredPos);
+
         _points.Add(pos);
-
         _renderer.positionCount++;
-        _renderer.SetPosition(_renderer.positionCount - 1, pos);
+        _renderer.SetPosition(_renderer.positionCount - 1, anchoredPos);
     }
 
     public List<Vector2> GetPoints()
@@ -24,10 +24,9 @@ public class Line : MonoBehaviour
         return _points;
     }
 
-    private bool CanAppend(Vector2 pos, Canvas canv)
+    private bool CanAppend(Vector2 pos)
     {
-        if (_renderer.positionCount == 0) return true;
-
-        return Vector2.Distance(_renderer.GetPosition(_renderer.positionCount - 1), pos) > DrawManager.RESOLUTION;
+        if (_points.Count == 0) return true;
+        return Vector2.Distance(_points[_points.Count - 1], pos) > DrawManager.RESOLUTION;
     }
 }

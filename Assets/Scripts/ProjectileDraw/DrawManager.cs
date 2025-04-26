@@ -1,67 +1,98 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DrawManager : MonoBehaviour
 {
-    private Camera _cam;
-    [SerializeField] private GameObject _canvas;
-    [SerializeField] private Line _linePrefab;
-    [SerializeField] public Transform ball; // Ссылка на объект мяча
+    public GameObject linePrefab;
+    public Canvas canvas;
+    public Camera cam;
+    public ArcMovement ballMovement;
+    public Transform ballTransform;
 
-    public const float RESOLUTION = .1f;
+    private Line currentLine;
 
-    private Line _currentLine;
-
-    void Start()
-    {
-        _cam = Camera.main;
-        Debug.Log(_canvas.GetComponent<Canvas>().pixelRect);
-    }
+    public const float RESOLUTION = 5f;
 
     void Update()
+{
+    Vector2 mousePos = Input.mousePosition;
+
+    if (Input.GetMouseButtonDown(0))
     {
-        Vector2 mousePos = Input.mousePosition;
-
-        if (Input.GetMouseButtonDown(0))
+        // 👉 Уничтожаем предыдущую линию
+        if (currentLine != null)
         {
-            if (_currentLine != null)
-            {
-                Destroy(_currentLine.gameObject);
-            }
-
-            _currentLine = Instantiate(_linePrefab, _canvas.transform);
+            Destroy(currentLine.gameObject);
         }
 
-        if (Input.GetMouseButton(0))
-        {
-            _currentLine.SetPosition(mousePos, _canvas.GetComponent<Canvas>());
-        }
+        // 👉 Сбрасываем мяч на начальную позицию
+        ballMovement.ResetPosition();
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            // Получаем точки свайпа
-            List<Vector2> swipePoints2D = _currentLine.GetComponent<Line>().GetPoints();
-            // Преобразуем их в 3D
-            List<Vector3> swipePoints3D = ConvertTo3DPoints(swipePoints2D, ball.position);
-
-        }
+        currentLine = Instantiate(linePrefab, canvas.transform).GetComponent<Line>();
     }
 
-    // Преобразование списка 2D точек в 3D
+    if (Input.GetMouseButton(0))
+    {
+        if (currentLine != null)
+            currentLine.SetPosition(mousePos, canvas);
+    }
+
+    if (Input.GetMouseButtonUp(0))
+    {
+        if (currentLine == null) return;
+
+        List<Vector2> swipePoints2D = currentLine.GetPoints();
+        if (swipePoints2D.Count < 2) return;
+
+        List<Vector3> swipePoints3D = ConvertTo3DPoints(swipePoints2D, ballTransform.position);
+
+        SetupBezierAndMove(swipePoints3D);
+
+        Destroy(currentLine.gameObject);
+        currentLine = null;
+    }
+}
+
+    private void SetupBezierAndMove(List<Vector3> points)
+{
+    // point0 - всегда стартует из позиции мяча
+    ballMovement.point0.position = ballTransform.position;
+
+    // point3 - конец свайпа
+    ballMovement.point3.position = points[points.Count - 1];
+
+    Vector3 dir = ballMovement.point3.position - ballMovement.point0.position;
+    Vector3 perpendicular = Vector3.Cross(dir, Vector3.up).normalized;
+
+    float distance = dir.magnitude / 3f;
+
+    // Для более гладкой дуги: берем первую точку свайпа как базу для первой контрольной точки
+    if (points.Count >= 2)
+        ballMovement.point1.position = Vector3.Lerp(ballMovement.point0.position, points[1], 0.5f) + perpendicular * distance * 0.5f;
+    else
+        ballMovement.point1.position = ballMovement.point0.position + dir / 3f + perpendicular * distance * 0.5f;
+
+    // Вторую контрольную точку можно подстроить между серединой и концом свайпа
+    if (points.Count >= 3)
+        ballMovement.point2.position = Vector3.Lerp(points[points.Count / 2], ballMovement.point3.position, 0.5f) + perpendicular * distance * 0.5f;
+    else
+        ballMovement.point2.position = ballMovement.point0.position + dir * 2f / 3f + perpendicular * distance * 0.5f;
+
+    ballMovement.StartMovement();
+}
+
+
     private List<Vector3> ConvertTo3DPoints(List<Vector2> points2D, Vector3 initialPosition)
     {
         List<Vector3> points3D = new List<Vector3>();
-        float zOffset = 0f; // Начальное смещение по оси Z
+        float zOffset = 0f;
 
         for (int i = 0; i < points2D.Count; i++)
         {
             Vector2 point2D = points2D[i];
+            Vector3 worldPoint = cam.ScreenToWorldPoint(new Vector3(point2D.x, point2D.y, cam.nearClipPlane + 5f));
 
-            // Преобразуем координаты мыши в мировые координаты
-            Vector3 worldPoint = _cam.ScreenToWorldPoint(new Vector3(point2D.x, point2D.y, _cam.nearClipPlane));
-            // Добавляем смещение Z пропорционально индексу точки
-            zOffset += 0.1f; // Задаем шаг по Z (регулируется)
+            zOffset += 0.05f;
             Vector3 point3D = new Vector3(worldPoint.x, worldPoint.y, initialPosition.z + zOffset);
 
             points3D.Add(point3D);
