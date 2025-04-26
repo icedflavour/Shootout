@@ -10,7 +10,7 @@ public class PowerCalculator : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Debug.Log(speed);
+        //Debug.Log(speed);
         if (slider == null && isMoving == true) return;
 
         // Move the sine wave smoothly using internal time
