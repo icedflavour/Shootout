@@ -8,7 +8,7 @@ public class DrawManager : MonoBehaviour
     [SerializeField] private GameObject _canvas;
     [SerializeField] private Line _linePrefab;
     [SerializeField] private Bezier _bezier;
-    [SerializeField] private Transform ball; // Ссылка на объект мяча
+    [SerializeField] public Transform ball; // Ссылка на объект мяча
 
     public const float RESOLUTION = .1f;
 

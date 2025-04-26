@@ -150,4 +150,13 @@ public class Bezier : MonoBehaviour
             prevPoint = point;
         }
     }
+    void Update()
+    {
+        
+    
+    for (t = 0; t <= 1; t += 0.1f)
+    {
+        ball.transform.position = GetPoint(P0, P1, P2, P3, t);
+    }
+}
 }
